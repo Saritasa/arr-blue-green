@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appcmd>
+    <SITE SITE.NAME="example.com" SITE.ID="1579033941" bindings="http/*:80:" state="Started">
+        <site name="example.com" id="1579033941">
+            <bindings>
+                <binding protocol="http" bindingInformation="*:80:" />
+            </bindings>
+            <limits />
+            <logFile>
+                <customFields>
+                </customFields>
+            </logFile>
+            <traceFailedRequestsLogging />
+            <applicationDefaults />
+            <virtualDirectoryDefaults />
+            <application path="/" applicationPool="example.com">
+                <virtualDirectoryDefaults />
+                <virtualDirectory path="/" physicalPath="C:\inetpub\wwwroot\example.com" />
+            </application>
+        </site>
+    </SITE>
+</appcmd>
