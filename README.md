@@ -21,3 +21,9 @@ Configure Server
     ```
     psake publish-web -properties "@{Environment='Production';ServerHost='HOSTNAME';Slot='Disabled'}"
     ```
+
+5. Swap slots.
+
+    ```
+    psake swap-slots -properties "@{Environment='Production';ServerHost='HOSTNAME';SourceSlot='Blue';DestinationSlot='Green'}"
+    ```

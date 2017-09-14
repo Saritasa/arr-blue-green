@@ -7,6 +7,10 @@ Properties `
     $AdminPassword = $null
     $DeployUsername = $null
     $DeployPassword = $null
+
+    $Slot = $null # Enabled, Disabled, Blue or Green.
+    $SourceSlot = $null
+    $DestinationSlot = $null
 }
 
 $root = $PSScriptRoot
@@ -112,4 +116,56 @@ function FindSlotServerFarm([string] $ServerHost, [string] $SiteName, [string[]]
 function FindSlot([string] $ServerHost, [string] $SiteName, [string[]] $Slots, [bool] $State)
 {
     FindSlotServerFarm $ServerHost $SiteName $Slots $State
+}
+
+Task swap-slots -depends init-winrm -description 'Swap deployment slots.' `
+    -requiredVariables @('ServerHost', 'SiteName', 'AdminCredential', 'SourceSlot', 'DestinationSlot') `
+{
+    $servers = @($ServerHost)
+    foreach ($server in $servers)
+    {
+        Write-Information "Swapping $SourceSlot and $DestinationSlot slots on $server server..."
+        SwapSlotsServerFarm $server $SiteName $SourceSlot $DestinationSlot
+    }
+
+    Write-Information 'Done swapping slots.'
+}
+
+function SwapSlotsServerFarm([string] $ServerHost, [string] $SiteName, [string] $SourceSlot, [string] $DestinationSlot)
+{
+    $session = Start-RemoteSession -ServerHost $ServerHost
+
+    $serverFarmName = "$SiteName-farm"
+    $sourceSite = "$SiteName-$SourceSlot".ToLowerInvariant()
+    $destinationSite = "$SiteName-$DestinationSlot".ToLowerInvariant()
+
+    Invoke-Command -Session $session -ScriptBlock `
+    {
+        $sourceEnabled = [bool](Get-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' `
+            -Filter "webFarms/webFarm[@name='$using:serverFarmName']/server[@address='$using:sourceSite']" `
+            -Name 'enabled').Value
+        $destinationEnabled = [bool](Get-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' `
+            -Filter "webFarms/webFarm[@name='$using:serverFarmName']/server[@address='$using:destinationSite']" `
+            -Name 'enabled').Value
+
+        if ($sourceEnabled -eq $destinationEnabled)
+        {
+            throw "Both slots have the same state. Enabled: $sourceEnabled"
+        }
+
+        $sourceEnabledNew = !$sourceEnabled
+        $destinationEnabledNew = !$destinationEnabled
+
+        Set-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' `
+            -Filter "webFarms/webFarm[@name='$using:serverFarmName']/server[@address='$using:sourceSite']" `
+            -Name 'enabled' -Value $sourceEnabledNew
+        Set-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' `
+            -Filter "webFarms/webFarm[@name='$using:serverFarmName']/server[@address='$using:destinationSite']" `
+            -Name 'enabled' -Value $destinationEnabledNew
+
+        Write-Information "$using:ServerHost/$using:sourceSite`: $sourceEnabled -> $sourceEnabledNew"
+        Write-Information "$using:ServerHost/$using:destinationSite`: $destinationEnabled -> $destinationEnabledNew"
+    }
+
+    Remove-PSSession $session
 }
