@@ -27,3 +27,10 @@ Configure Server
     ```
     psake swap-slots -properties "@{Environment='Production';ServerHost='HOSTNAME';SourceSlot='Blue';DestinationSlot='Green'}"
     ```
+
+6. Generate version report.
+
+    ```
+    psake show-web-version -properties "@{Environment='Production';ServerHost='HOSTNAME';FileName='Web.xml'}"
+    psake generate-version-report -properties "@{Environment='Production';ServerHost='HOSTNAME';Files='Web.xml'}"
+    ```

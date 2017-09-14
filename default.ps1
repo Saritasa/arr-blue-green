@@ -8,6 +8,7 @@ $env:PSModulePath += ";$PSScriptRoot\scripts\modules"
 
 . .\scripts\AdminTasks.ps1
 . .\scripts\BuildTasks.ps1
+. .\scripts\MonitoringTasks.ps1
 . .\scripts\PublishTasks.ps1
 
 Properties `
