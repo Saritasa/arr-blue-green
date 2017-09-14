@@ -10,7 +10,7 @@ Properties `
 }
 
 $root = $PSScriptRoot
-$src = Resolve-Path "$root\.\src"
+$src = Resolve-Path "$root\..\src"
 $workspace = Resolve-Path "$root\.."
 
 
