@@ -91,6 +91,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Support\AppVersion.cs" />
+    <Compile Include="Support\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
