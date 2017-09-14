@@ -6,6 +6,7 @@ $env:PSModulePath += ";$PSScriptRoot\scripts\modules"
 . .\scripts\Saritasa.PsakeExtensions.ps1
 . .\scripts\Saritasa.PsakeTasks.ps1
 
+. .\scripts\AdminTasks.ps1
 . .\scripts\BuildTasks.ps1
 . .\scripts\PublishTasks.ps1
 
@@ -16,9 +17,15 @@ Properties `
     $DeployUsername = $env:DeployUsername
     $DeployPassword = $env:DeployPassword
 
-    $Configuration = 'Debug'
-    $Environment = 'Development'
-    $SiteName = 'example.com'
-    $WwwrootPath = 'C:\inetpub\wwwroot'
+    $Environment = $env:Environment
+    $Slot = $env:Slot
+}
 
+TaskSetup `
+{
+    if (!$Environment)
+    {
+        Expand-PsakeConfiguration @{ Environment = 'Development' }
+    }
+    Import-PsakeConfigurationFile ".\Config.$Environment.ps1"
 }
