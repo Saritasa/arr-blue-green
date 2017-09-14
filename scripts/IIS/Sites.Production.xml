@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <appcmd>
-    <SITE SITE.NAME="example.com" SITE.ID="1579033941" bindings="http/*:80:" state="Started">
-        <site name="example.com" id="1579033941">
+    <SITE SITE.NAME="$(SiteName)" SITE.ID="$(SiteNameHash)" bindings="http/*:8$(SiteNameHash):" state="Started">
+        <site name="$(SiteName)" id="$(SiteNameHash)">
             <bindings>
-                <binding protocol="http" bindingInformation="*:80:" />
+                <binding protocol="http" bindingInformation="*:8$(SiteNameHash):" />
             </bindings>
             <limits />
             <logFile>
@@ -13,9 +13,9 @@
             <traceFailedRequestsLogging />
             <applicationDefaults />
             <virtualDirectoryDefaults />
-            <application path="/" applicationPool="example.com">
+            <application path="/" applicationPool="Example$(Slot)">
                 <virtualDirectoryDefaults />
-                <virtualDirectory path="/" physicalPath="C:\inetpub\wwwroot\example.com" />
+                <virtualDirectory path="/" physicalPath="$(WwwrootPath)\$(SiteName)" />
             </application>
         </site>
     </SITE>

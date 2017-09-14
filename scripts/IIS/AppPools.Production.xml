@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <appcmd>
-    <APPPOOL APPPOOL.NAME="example.com" PipelineMode="Integrated" RuntimeVersion="v4.0" state="Started">
-        <add name="example.com">
+    <APPPOOL APPPOOL.NAME="Example$(Slot)" PipelineMode="Integrated" RuntimeVersion="v4.0" state="Started">
+        <add name="Example$(Slot)">
             <processModel />
             <recycling>
                 <periodicRestart>
