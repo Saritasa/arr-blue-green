@@ -43,13 +43,14 @@ function GetSlotStatusServerFarm([string] $SiteName, [string] $Slot)
 
 function ShowWebVersion([string] $ServerHost, [string] $SiteName, [string[]] $Slots)
 {
+    $session = Start-RemoteSession -ServerHost $ServerHost
+
     $slotStatuses = @{}
     foreach ($slot in $Slots)
     {
-        $slotStatuses[$slot] = GetSlotStatusServerFarm $ServerHost $SiteName $slot
+        $slotStatuses[$slot] = Invoke-Command -Session $session -ScriptBlock ${Function:GetSlotStatusServerFarm} `
+            -ArgumentList @($SiteName, $slot)
     }
-
-    $session = Start-RemoteSession -ServerHost $ServerHost
 
     Invoke-Command -Session $session -ScriptBlock `
         {
