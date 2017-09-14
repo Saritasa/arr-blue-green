@@ -259,3 +259,4 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/scripts/modules/Saritasa.Build/1.15.0/*.exe

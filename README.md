@@ -13,3 +13,11 @@ Configure Server
     ```
     psake setup-web-server -properties "@{Environment='Production';ServerHost='HOSTNAME'}"
     ```
+
+3. Disable one server in example.com-farm.
+
+4. Publish app.
+
+    ```
+    psake publish-web -properties "@{Environment='Production';ServerHost='HOSTNAME';Slot='Disabled'}"
+    ```

@@ -8,12 +8,12 @@ $src = Resolve-Path "$root\..\src"
 
 Task pre-build -description 'Restore NuGet packages, copy configs.' `
 {
-    # Invoke-NugetRestore "$src\Example.sln"
-    # Copy-DotnetConfig "$src\Example\Web.config.template"
+    Initialize-MSBuild
+    Invoke-NugetRestore -SolutionPath "$src\BlueGreenTest.sln"
 }
 
 Task build -depends pre-build -description '* Build all projects.' `
     -requiredVariables @('Configuration') `
 {
-    # Invoke-SolutionBuild -SolutionPath "$src\Example.sln" -Configuration $Configuration
+    Invoke-SolutionBuild -SolutionPath "$src\BlueGreenTest.sln" -Configuration $Configuration
 }
