@@ -10,4 +10,6 @@ Expand-PsakeConfiguration `
     DeployPassword = 'TestPwd@1234'
     AdminUsername = 'Administrator'
     AdminPassword = 'Qwerty123'
+
+    CertificatePassword = 'rDXQL9n3'
 }

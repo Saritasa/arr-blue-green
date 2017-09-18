@@ -8,11 +8,12 @@ Properties `
     $DeployUsername = $null
     $DeployPassword = $null
     $WwwrootPath = $null
+    $CertificatePassword = $null
 }
 
 $root = $PSScriptRoot
 
-Task setup-web-server -depends trust-host, setup-web-deploy, setup-sites, setup-web-soft -description 'Configure IIS and install required software.' `
+Task setup-web-server -depends trust-host, setup-web-deploy, setup-sites, import-certificate, setup-web-soft -description 'Configure IIS and install required software.' `
 {
 }
 
@@ -165,6 +166,34 @@ Task setup-web-soft -depends init-winrm -description 'Install .NET Framework 4.6
     $session = Start-RemoteSession -ServerHost $ServerHost
 
     Invoke-Command -Session $session -ScriptBlock { cinst dotnet4.6.2 -y }
+
+    Remove-PSSession $session
+}
+
+Task import-certificate -depends init-winrm -description 'Import SSL certificate to web server.' `
+    -requiredVariables @('ServerHost', 'CertificatePassword') `
+{
+    $certificatePath = "$root\IIS\ExampleShared\example.com_2017.pfx"
+    $password = ConvertTo-SecureString $CertificatePassword -AsPlainText -Force
+    Import-SslCertificate -ServerHost $ServerHost -CertificatePath $certificatePath -CertificatePassword $password
+
+    $certificateObject = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $certificateObject.Import($certificatePath, $password, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::DefaultKeySet)
+    $thumbprint = $certificateObject.Thumbprint
+
+    $session = Start-RemoteSession -ServerHost $ServerHost
+
+    Invoke-Command -Session $session -ScriptBlock `
+        {
+            Import-Module WebAdministration
+
+            if (Test-Path IIS:\SslBindings\0.0.0.0!443)
+            {
+                Remove-Item -Path IIS:\SslBindings\0.0.0.0!443
+            }
+
+            Get-Item -Path "Cert:\LocalMachine\My\$using:thumbprint" | New-Item -Path IIS:\SslBindings\0.0.0.0!443
+        }
 
     Remove-PSSession $session
 }
