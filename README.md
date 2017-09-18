@@ -8,7 +8,7 @@ Configure Server
 
     https://github.com/Saritasa/PSGallery/blob/master/docs/WinRMConfiguration.md
 
-2. Install IIS and other software.
+2. Install IIS and other software. Restart server to finish .NET Framework installation.
 
     ```
     psake setup-web-server -properties "@{Environment='Production';ServerHost='HOSTNAME'}"

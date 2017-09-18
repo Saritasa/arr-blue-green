@@ -12,7 +12,7 @@ Properties `
 
 $root = $PSScriptRoot
 
-Task setup-web-server -depends trust-host, setup-web-deploy, setup-sites -description 'Configure IIS and install required software.' `
+Task setup-web-server -depends trust-host, setup-web-deploy, setup-sites, setup-web-soft -description 'Configure IIS and install required software.' `
 {
 }
 
@@ -157,4 +157,14 @@ function SetupSite([string] $Slot,
     'Site is configured for publish.'
 
     # TODO: Set permissions for deploy user to site root directory.
+}
+
+Task setup-web-soft -depends init-winrm -description 'Install .NET Framework 4.6.2.' `
+    -requiredVariables @('ServerHost') `
+{
+    $session = Start-RemoteSession -ServerHost $ServerHost
+
+    Invoke-Command -Session $session -ScriptBlock { cinst dotnet4.6.2 -y }
+
+    Remove-PSSession $session
 }
