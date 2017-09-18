@@ -8,4 +8,6 @@ Expand-PsakeConfiguration `
 
     DeployUsername = 'DeployUser'
     DeployPassword = 'TestPwd@1234'
+    AdminUsername = 'Administrator'
+    AdminPassword = 'Qwerty123'
 }

@@ -24,7 +24,7 @@ Task pre-publish -depends pre-build -description 'Set common publish settings fo
     Initialize-WebDeploy -Credential $credential
 }
 
-Task publish-web -depends pre-publish -description '* Publish all web apps to specified server.' `
+Task publish-web -depends pre-publish, init-winrm -description '* Publish all web apps to specified server.' `
     -requiredVariables @('Configuration', 'ServerHost', 'SiteName') `
 {
     DeployWebProject "$src\BlueGreenTest\BlueGreenTest.csproj"
