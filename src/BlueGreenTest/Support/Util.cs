@@ -24,7 +24,7 @@ namespace FormI9v2.Core.Support
             var result = new AppVersion
             {
                 FileVersion = executingAssembly.GetName().Version.ToString(),
-                Slot = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "\\..").Name
+                Slot = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Name
             };
 
             var attribute = executingAssembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).FirstOrDefault()
