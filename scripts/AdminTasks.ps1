@@ -7,6 +7,7 @@ Properties `
     $AdminPassword = $null
     $DeployUsername = $null
     $DeployPassword = $null
+    $WwwrootPath = $null
 }
 
 $root = $PSScriptRoot
@@ -26,7 +27,7 @@ Task setup-sites -depends init-winrm -description 'Create site, deployment user,
 {
     $session = Start-RemoteSession -ServerHost $ServerHost
 
-    SetupSharedSite
+    SetupSharedSite $session
 
     if ($Slots)
     {
@@ -37,6 +38,13 @@ Task setup-sites -depends init-winrm -description 'Create site, deployment user,
             Write-Information "Setting up $SiteName site in slot $slotName..."
             SetupSite $slotName $session $Environment
             Write-Information "Finished $SiteName configuration in slot $slotName."
+
+            # Add a record to hosts.
+            Invoke-Command -Session $session -ScriptBlock `
+                {
+                    Add-Content -Encoding UTF8 "$env:SystemRoot\System32\drivers\etc\hosts" `
+                        "127.0.0.1    $using:SiteName-$using:slotName".ToLowerInvariant()
+                }
         }
     }
     else
@@ -49,11 +57,14 @@ Task setup-sites -depends init-winrm -description 'Create site, deployment user,
     Remove-PSSession $session
 }
 
-function SetupSharedSite()
+function SetupSharedSite([System.Management.Automation.Runspaces.PSSession] $Session)
 {
     Write-Information "Setting up $SiteName shared site..."
-    SetupSite $null $session "$($Environment)Shared"
+    SetupSite $null $Session "$($Environment)Shared"
     Write-Information "Finished $SiteName shared configuration."
+
+    # Copy web.config with UrlRewrite rules.
+    Copy-Item "$root\IIS\ExampleShared\web.config" "$WwwrootPath\$SiteName" -ToSession $Session
 }
 
 function SetupFarm()
