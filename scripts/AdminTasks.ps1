@@ -26,6 +26,8 @@ Task setup-sites -depends init-winrm -description 'Create site, deployment user,
 {
     $session = Start-RemoteSession -ServerHost $ServerHost
 
+    SetupSharedSite
+
     if ($Slots)
     {
         SetupFarm
@@ -45,6 +47,13 @@ Task setup-sites -depends init-winrm -description 'Create site, deployment user,
     }
 
     Remove-PSSession $session
+}
+
+function SetupSharedSite()
+{
+    Write-Information "Setting up $SiteName shared site..."
+    SetupSite $null $session "$($Environment)Shared"
+    Write-Information "Finished $SiteName shared configuration."
 }
 
 function SetupFarm()

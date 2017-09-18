@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appcmd>
+    <SITE SITE.NAME="$(SiteName)" SITE.ID="$(SiteNameHash)" bindings="http/*:80:,https/*:443:" state="Started">
+        <site name="$(SiteName)" id="$(SiteNameHash)">
+            <bindings>
+                <binding protocol="http" bindingInformation="*:80:" />
+                <binding protocol="https" bindingInformation="*:443:" sslFlags="0" />
+            </bindings>
+            <limits />
+            <logFile>
+                <customFields>
+                </customFields>
+            </logFile>
+            <traceFailedRequestsLogging />
+            <applicationDefaults />
+            <virtualDirectoryDefaults />
+            <application path="/" applicationPool="ExampleShared">
+                <virtualDirectoryDefaults />
+                <virtualDirectory path="/" physicalPath="$(WwwrootPath)\$(SiteName)" />
+            </application>
+        </site>
+    </SITE>
+</appcmd>
