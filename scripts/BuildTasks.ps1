@@ -10,6 +10,8 @@ Task pre-build -description 'Restore NuGet packages, copy configs.' `
 {
     Initialize-MSBuild
     Invoke-NugetRestore -SolutionPath "$src\BlueGreenTest.sln"
+
+    Exec { GitVersion.exe /updateassemblyinfo }
 }
 
 Task build -depends pre-build -description '* Build all projects.' `
