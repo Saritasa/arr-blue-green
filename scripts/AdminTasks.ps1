@@ -175,7 +175,7 @@ Task import-certificate -depends init-winrm -description 'Import SSL certificate
 {
     $certificatePath = "$root\IIS\ExampleShared\example.com_2017.pfx"
     $password = ConvertTo-SecureString $CertificatePassword -AsPlainText -Force
-    Import-SslCertificate -ServerHost $ServerHost -CertificatePath $certificatePath -CertificatePassword $password
+    Import-SslCertificate2 -ServerHost $ServerHost -CertificatePath $certificatePath -CertificatePassword $password
 
     $certificateObject = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
     $certificateObject.Import($certificatePath, $password, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::DefaultKeySet)

@@ -72,7 +72,7 @@ RequiredModules = @(
 FunctionsToExport = @('Import-AppPool', 'Import-Site',
     'Export-AppPool', 'Export-Site', 'Install-Arr', 'Install-Iis',
     'Install-WebManagementService', 'Install-WebDeploy',
-    'Install-UrlRewrite', 'Install-MsiPackage', 'Import-SslCertificate')
+    'Install-UrlRewrite', 'Install-MsiPackage', 'Import-SslCertificate2')
 
 # Cmdlets to export from this module
 CmdletsToExport = @()

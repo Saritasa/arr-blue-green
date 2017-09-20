@@ -440,7 +440,7 @@ function Install-MsiPackage
     }
 }
 
-function Import-SslCertificate
+function Import-SslCertificate2
 {
     [CmdletBinding()]
     param
