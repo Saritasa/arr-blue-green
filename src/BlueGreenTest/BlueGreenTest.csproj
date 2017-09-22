@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Controllers\UrlController.cs" />
     <Compile Include="Controllers\MetaController.cs" />
     <Compile Include="Global.asax.cs">
